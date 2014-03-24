@@ -1,10 +1,8 @@
 //TO DO : 
-//  mostrar la imagen en el watermark
 //	aspect ratio
 //	Eliminar watermark
 //  Agregar mas de un watermark
 //  Permitir al watermark salirse de foco
-//  Cursores del mouse
 
 ;(function($){
 
@@ -16,7 +14,7 @@
 		var container = $("<div>",{class:options.containerClass});
 		container.width(object.width());
 		container.height(object.height());
-		var watermark = $("<div>",{class:options.watermarkerClass});
+		var watermark = $("<div>",{class:options.watermarkerClass}).css("left",options.offsetLeft).css("top",options.offsetTop);
 		var watermarkImage = $("<img>", {src: options.imagePath, class: options.watermarkImageClass});
 		var resizer = $("<div>",{class:options.resizerClass});
 		container.appendTo($(object).parent());
@@ -24,7 +22,7 @@
 		watermarkImage.appendTo(watermark);
 		resizer.appendTo(watermark);
 		watermark.appendTo(container);
-
+		watermark.height(checkHeight(watermark.height(), watermark[0]));
 
 
 		// Methods
@@ -39,7 +37,10 @@
 				watermarkImageClass: "watermarker-image",
 				resizerClass: "resizer",
 				draggingClass: "dragging",
-				resizingClass: "resizing"
+				resizingClass: "resizing",
+				offsetLeft: 0,
+				offsetTop: 0,
+				aspectRatio: undefined,
 			};
 			for(attribute in options){
 				if(options.hasOwnProperty(attribute)){
@@ -75,7 +76,7 @@
 		}
 
 
-		var checkWidth = function(width, element){
+		function checkWidth(width, element){
 			var container = element.parentNode;
 			var maxWidth =  container.offsetWidth - element.offsetLeft;
 			if ( parseInt(width) <= 0 ) return 0 ;
@@ -83,9 +84,10 @@
 			return width;
 		}
 
-		var checkHeight = function(height, element){
+		function checkHeight(height, element){
 			var container = element.parentNode;
 			var maxHeight =  container.offsetHeight - element.offsetTop;
+			if (options.aspectRatio != undefined) height = $(element).width() / options.aspectRatio;
 			if ( parseInt(height) <= 0 ) return 0 ;
 			if ( parseInt(height) > maxHeight ) return maxHeight;
 			return height;
@@ -161,13 +163,6 @@
 			var posY = target.style.top.length > 0 ? parseInt(target.style.top) : 0;
 			return posY;
 		}	
-
-		//ESTO HAY QUE BORRARLO
-		$(document).on("mousemove",function(event){
-			$(".x").text(event.pageX)
-			$(".y").text(event.pageY)
-		});
-
 
 		container.on("mousedown","." + options.watermarkerClass, dragEvent);
 		container.on("mousedown","." + options.resizerClass, resizeEvent);
