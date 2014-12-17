@@ -181,21 +181,24 @@
 
 	$.fn.watermarker = function(options){
 		if (typeof options === "string" && options == "destroy"){
-			debugger;
-			var $element = this.data("pluginWatermarker");
-			$element.element.appendTo($element.container.parent());
-			$element.container.remove();
-			$element.watermark.remove();
-			$element.watermarkImage.remove();
-			$element.resizer.remove();
-			this.removeData("pluginWatermarker");
-			$element.onDestroy($element.element, $element);
+			$(this).each(function(){
+				var $self = $(this);
+				var $element = $self.data("pluginWatermarker");
+				$element.element.appendTo($element.container.parent());
+				$element.container.remove();
+				$element.watermark.remove();
+				$element.watermarkImage.remove();
+				$element.resizer.remove();
+				$self.removeData("pluginWatermarker");
+				$element.onDestroy($element.element, $element);				
+			});
+
 		}
 		else{
 			return $(this).each(function(){
-				debugger;
-				if($(this).data("pluginWatermarker") === undefined){
-					$(this).data("pluginWatermarker",$.watermarker($(this), options));									
+				var $self = $(this);
+				if($self.data("pluginWatermarker") === undefined){
+					$self.data("pluginWatermarker",$.watermarker($self, options));									
 				}
 
 			});			
