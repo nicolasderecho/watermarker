@@ -31,6 +31,7 @@
 			var defaults = {
 				onChange: function(){},
 				onInitialize: function(){},
+				onDestroy: function(){},
 				imagePath: "images/watermark.png",
 				containerClass: "watermarker-wrapper",
 				watermarkerClass: "watermarker-container",
@@ -40,7 +41,7 @@
 				resizingClass: "resizing",
 				offsetLeft: 0,
 				offsetTop: 0,
-				aspectRatio: undefined,
+				aspectRatio: undefined
 			};
 			for(attribute in options){
 				if(options.hasOwnProperty(attribute)){
@@ -167,13 +168,39 @@
 		container.on("mousedown","." + options.watermarkerClass, dragEvent);
 		container.on("mousedown","." + options.resizerClass, resizeEvent);
 
-		return $(object);
+		options.container = container;
+		options.watermark = watermark;
+		options.watermarkImage = watermarkImage;
+		options.resizer = resizer;
+		options.element = object;
+
+		return options;
 
 	}
 
 
 	$.fn.watermarker = function(options){
-		$.watermarker(this, options);
+		if (typeof options === "string" && options == "destroy"){
+			debugger;
+			var $element = this.data("pluginWatermarker");
+			$element.element.appendTo($element.container.parent());
+			$element.container.remove();
+			$element.watermark.remove();
+			$element.watermarkImage.remove();
+			$element.resizer.remove();
+			this.removeData("pluginWatermarker");
+			$element.onDestroy($element.element, $element);
+		}
+		else{
+			return $(this).each(function(){
+				debugger;
+				if($(this).data("pluginWatermarker") === undefined){
+					$(this).data("pluginWatermarker",$.watermarker($(this), options));									
+				}
+
+			});			
+		}
+
 		return this;
 	}
 
