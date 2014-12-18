@@ -1,11 +1,23 @@
 //TO DO : 
-//	aspect ratio
-//	Eliminar watermark
+// Permitir girar la imagen
+// Que la opcion de girar o resizear sean opcionales
 //  Agregar mas de un watermark
 //  Permitir al watermark salirse de foco
 
 ;(function($){
 
+
+	var getCoords = function(element){
+		var opt = { x:element.offsetLeft,
+			y:element.offsetTop,
+			width: element.offsetWidth,
+			height: element.offsetHeight,
+			opacity: parseInt ( $(element).css("opacity") )
+		}
+		opt.jsonCoords = JSON.stringify(opt);
+		opt.element = element;
+		return opt;
+	}
 
 	$.watermarker = function(object, options){
 
@@ -109,22 +121,15 @@
 			$("." + draggingClass()).removeClass(draggingClass());
 		}
 
-		var getCoords = function(element){
-			var opt = { x:element.offsetLeft,
-				y:element.offsetTop,
-				width: element.offsetWidth,
-				height: element.offsetHeight,
-				opacity: parseInt ( $(element).css("opacity") )
-			}
-			opt.jsonCoords = JSON.stringify(opt);
-			opt.element = element;
-			return opt;
-		}
-
 		var resize = function(event){
 			var element = $( document.querySelector( "." + options.resizerClass) ).parent()[0];
 			var width = parseInt(event.pageX) - parseInt(element.style.left.length > 0 ? element.style.left : 0 ) ;
-			var height = parseInt(event.pageY)  - parseInt(element.style.top.length > 0 ? element.style.top : 0);	
+			var height;
+			if(options.aspectRatio !== undefined && options.aspectRatio !== null){
+				height = width / options.aspectRatio;
+			}else{
+				height = parseInt(event.pageY)  - parseInt(element.style.top.length > 0 ? element.style.top : 0);	
+			}
 			$(element).width(checkWidth(width,element));
 			$(element).height(checkHeight(height,element));
 		}
@@ -179,19 +184,49 @@
 	}
 
 
+	var setOpacity = function(element, opacity){
+		$(element).css("opacity", opacity);
+	}
+
+	var getOpacity = function(element){
+		return $(element).css("opacity");
+	}	
+
+	var destroyWatermarker = function(elements,options){
+		var $elements = $(elements);
+		$elements.each(function(){
+			var $self = $(this);
+			var $element = $self.data("pluginWatermarker");
+			$element.element.appendTo($element.container.parent());
+			$element.container.remove();
+			$element.watermark.remove();
+			$element.watermarkImage.remove();
+			$element.resizer.remove();
+			$self.removeData("pluginWatermarker");
+			$element.onDestroy($element.element, $element);				
+		});		
+	}
+
 	$.fn.watermarker = function(options){
-		if (typeof options === "string" && options == "destroy"){
-			$(this).each(function(){
-				var $self = $(this);
-				var $element = $self.data("pluginWatermarker");
-				$element.element.appendTo($element.container.parent());
-				$element.container.remove();
-				$element.watermark.remove();
-				$element.watermarkImage.remove();
-				$element.resizer.remove();
-				$self.removeData("pluginWatermarker");
-				$element.onDestroy($element.element, $element);				
-			});
+		var watermarkerArguments = arguments;
+		if (typeof options === "string"){
+			switch(options){
+				case "destroy":
+					destroyWatermarker($(this),options);
+					break;
+				case "opacity":
+					if (arguments.length > 1){
+						$(this).each(function(){
+							var image = $(this).data("pluginWatermarker").watermarkImage;
+							var opacity = watermarkerArguments[1];
+							setOpacity(image,opacity);
+						});							
+					}
+					if(arguments.length == 1){
+						return getOpacity($(this).first());						
+					}
+					break;
+			}
 
 		}
 		else{
