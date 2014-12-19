@@ -1,7 +1,7 @@
 //TO DO : 
 // Permitir girar la imagen
 // Que la opcion de girar o resizear sean opcionales
-//  Agregar mas de un watermark
+//  Agregar mas de un watermark (se agrego el manejo de eventos para permitir mas de un watermark....al iniciar faltaria q no wrappee la imagen si ya esta wrappeada)
 //  Permitir al watermark salirse de foco
 
 ;(function($){
@@ -19,6 +19,62 @@
 		return opt;
 	}
 
+	var isFirstWatermark = function(data){
+		return data === undefined || data === null || data.length == 0;
+	}
+
+	var jQueryClassName = function(className){
+		if(className !== undefined && className !== null && className.length > 0){
+			return className[0] == "." ? className : "." + className;
+		}
+	}
+
+	var setOpacity = function(element, opacity){
+		$(element).css("opacity", opacity);
+	}
+
+	var getOpacity = function(element){
+		return $(element).css("opacity");
+	}	
+
+	var destroyWatermarker = function(elements,options){
+		var $elements = $(elements);
+		$elements.each(function(){
+			var $self = $(this);
+			var $data = $self.data("pluginWatermarker");
+			$data.each(function(){
+				var $element = $(this);
+				$element.element.appendTo($element.container.parent());
+				$element.container.remove();
+				$element.watermark.remove();
+				$element.watermarkImage.remove();
+				$element.resizer.remove();
+			});
+			$data.first().onDestroy($data.first().element, $data.first());
+			$self.removeData("pluginWatermarker");
+		});		
+	}
+
+	var removeWatermark = function(watermark){
+		//sacar del array
+		//volar el watermarker
+		//si era el unico watermark que habia, hacer destroy
+	}
+
+	var addWatermark = function(element, options){
+		var $self = $(element);
+		var data = $self.data("pluginWatermarker");
+		if( data !== undefined && data !== null){
+			data.push($.watermarker($self, options));
+		}
+		else{
+			data = [];
+			data.push($.watermarker($self, options));	
+		}
+		$self.data("pluginWatermarker",data);		
+	}
+
+
 	$.watermarker = function(object, options){
 
 		//Initialize
@@ -29,8 +85,14 @@
 		var watermark = $("<div>",{class:options.watermarkerClass}).css("left",options.offsetLeft).css("top",options.offsetTop);
 		var watermarkImage = $("<img>", {src: options.imagePath, class: options.watermarkImageClass});
 		var resizer = $("<div>",{class:options.resizerClass});
-		container.appendTo($(object).parent());
-		object.appendTo(container);
+		var data = $(object).data("pluginWatermarker");
+		if(isFirstWatermark(data)){
+			container.appendTo($(object).parent());
+			object.appendTo(container);			
+		}
+		else{
+			container = $(object).parent();
+		}
 		watermarkImage.appendTo(watermark);
 		resizer.appendTo(watermark);
 		watermark.appendTo(container);
@@ -45,6 +107,7 @@
 				onInitialize: function(){},
 				onDestroy: function(){},
 				imagePath: "images/watermark.png",
+				eventTriggerClass: "watermarker-wrapper",
 				containerClass: "watermarker-wrapper",
 				watermarkerClass: "watermarker-container",
 				watermarkImageClass: "watermarker-image",
@@ -107,6 +170,7 @@
 		}	
 
 		var drag = function(event){ 
+			debugger;
 			var element = document.querySelector("." + draggingClass());
 			var container = element.parentNode;
 			var left = parseInt(event.pageX) + $(element).data("difX") + "px";
@@ -122,7 +186,7 @@
 		}
 
 		var resize = function(event){
-			var element = $( document.querySelector( "." + options.resizerClass) ).parent()[0];
+			var element = $(options.resizer ).parent()[0];
 			var width = parseInt(event.pageX) - parseInt(element.style.left.length > 0 ? element.style.left : 0 ) ;
 			var height;
 			if(options.aspectRatio !== undefined && options.aspectRatio !== null){
@@ -136,7 +200,8 @@
 
 		var stopResizing = function(event){
 			$(document).off("mousemove",resize);
-			$("." + resizingClass()).removeClass(resizingClass());
+			$(options.resizer).removeClass(resizingClass());
+			options.resizer = undefined;
 		}
 
 		var dragEvent = function(event){
@@ -149,9 +214,11 @@
 		};
 
 		var resizeEvent = function(event){
-			$(this).addClass(resizingClass());
-			$(this).data("difX", parseInt(this.style.left.length > 0 ? this.style.left : 0) - event.pageX + document.body.scrollTop);
-			$(this).data("difY", parseInt(this.style.top.length > 0 ? this.style.top : 0 ) - event.pageY + document.body.scrollTop);
+			var resizer = $(this);
+			options.resizer = resizer;
+			resizer.addClass(resizingClass());
+			resizer.data("difX", parseInt(this.style.left.length > 0 ? this.style.left : 0) - event.pageX + document.body.scrollTop);
+			resizer.data("difY", parseInt(this.style.top.length > 0 ? this.style.top : 0 ) - event.pageY + document.body.scrollTop);
 			$(document).on("mousemove",resize);
 			$(document).on("mouseup",stopResizing);
 			return false;
@@ -170,8 +237,10 @@
 			return posY;
 		}	
 
-		container.on("mousedown","." + options.watermarkerClass, dragEvent);
-		container.on("mousedown","." + options.resizerClass, resizeEvent);
+		if (isFirstWatermark(data)){
+			$(document).on("mousedown", jQueryClassName(options.eventTriggerClass) + " " + jQueryClassName(options.watermarkerClass), dragEvent);
+			$(document).on("mousedown", jQueryClassName(options.eventTriggerClass) + " " + jQueryClassName(options.resizerClass), resizeEvent);			
+		}
 
 		options.container = container;
 		options.watermark = watermark;
@@ -181,30 +250,6 @@
 
 		return options;
 
-	}
-
-
-	var setOpacity = function(element, opacity){
-		$(element).css("opacity", opacity);
-	}
-
-	var getOpacity = function(element){
-		return $(element).css("opacity");
-	}	
-
-	var destroyWatermarker = function(elements,options){
-		var $elements = $(elements);
-		$elements.each(function(){
-			var $self = $(this);
-			var $element = $self.data("pluginWatermarker");
-			$element.element.appendTo($element.container.parent());
-			$element.container.remove();
-			$element.watermark.remove();
-			$element.watermarkImage.remove();
-			$element.resizer.remove();
-			$self.removeData("pluginWatermarker");
-			$element.onDestroy($element.element, $element);				
-		});		
 	}
 
 	$.fn.watermarker = function(options){
@@ -231,10 +276,8 @@
 		}
 		else{
 			return $(this).each(function(){
-				var $self = $(this);
-				if($self.data("pluginWatermarker") === undefined){
-					$self.data("pluginWatermarker",$.watermarker($self, options));									
-				}
+				
+				addWatermark(this, options)
 
 			});			
 		}
