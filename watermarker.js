@@ -1,7 +1,7 @@
 //TO DO : 
 // Permitir girar la imagen
 // Que la opcion de girar o resizear sean opcionales
-//  Agregar mas de un watermark (se agrego el manejo de eventos para permitir mas de un watermark....al iniciar faltaria q no wrappee la imagen si ya esta wrappeada)
+// Que el tema de opacidad se pueda setear para cada watermark
 //  Permitir al watermark salirse de foco
 
 ;(function($){
@@ -41,17 +41,24 @@
 		var $elements = $(elements);
 		$elements.each(function(){
 			var $self = $(this);
-			var $data = $self.data("pluginWatermarker");
-			$data.each(function(){
-				var $element = $(this);
-				$element.element.appendTo($element.container.parent());
-				$element.container.remove();
-				$element.watermark.remove();
-				$element.watermarkImage.remove();
-				$element.resizer.remove();
-				$element.onRemove($element);
+			var data = $self.data("pluginWatermarker");
+			$.each(data,function(){
+				var element = this;
+				//element.element.appendTo(element.container.parent());
+				//element.container.remove();
+				element.watermark.remove();
+				element.watermarkImage.remove();
+				element.resizer.remove();
+				element.onRemove(element.watermark,element);
 			});
-			$data.first().onDestroy($data.first().element, $data.first());
+			if (data.length > 0){
+				var firstWatermark = data[0];
+				$(firstWatermark.element).appendTo($(firstWatermark.container).parent());
+				$(firstWatermark.container).remove();
+				$(document).off("mousedown", jQueryClassName(data[0].eventTriggerClass) + " " + jQueryClassName(data[0].watermarkerClass));
+				$(document).off("mousedown", jQueryClassName(data[0].eventTriggerClass) + " " + jQueryClassName(data[0].resizerClass));			
+				data[0].onDestroy(data[0].element, data[0]);
+			}
 			$self.removeData("pluginWatermarker");
 		});		
 	}
@@ -60,14 +67,17 @@
 		
 		var $element = $(element);
 		var data = $element.data("pluginWatermarker");
+		var dataToRemove;
 		if (data.length > 1){
-			for (var i = 0; i < data.length; i++ ){
-				if( (data[i].watermarker !== undefined && watermarkImageContainer !== undefined ) && (data[i].watermark[0] === watermarkImageContainer[0]) ){
-					data.splice(i,1);
+			for (var index = 0; index < data.length; index++ ){
+				if( (data[index].watermark !== undefined && watermarkImageContainer !== undefined ) && (data[index].watermark[0] === watermarkImageContainer[0]) ){
+					dataToRemove = data[index];
+					data.splice(index,1);
 					break;
 				}
-			}	
+			}
 			$element.data("pluginWatermarker", data);
+			dataToRemove.onRemove(dataToRemove.watermark,dataToRemove);
 			watermarkImageContainer.remove();
 		}
 		else{
@@ -91,7 +101,6 @@
 		}
 		$self.data("pluginWatermarker",data);		
 	}
-
 
 	$.watermarker = function(object, options){
 
@@ -130,11 +139,13 @@
 				containerClass: "watermarker-wrapper",
 				watermarkerClass: "watermarker-container",
 				watermarkImageClass: "watermarker-image",
+				removeClass: "watermarker-remove-item",
 				resizerClass: "resizer",
 				draggingClass: "dragging",
 				resizingClass: "resizing",
 				offsetLeft: 0,
 				offsetTop: 0,
+				allowRemove: true,
 				aspectRatio: undefined
 			};
 			for(attribute in options){
@@ -145,6 +156,10 @@
 			return defaults;
 		}
 
+		function getClassName(className){
+			if(className === undefined || className === null){return;}
+			return className[0] == "." ? className.substring(1) : className;
+		}
 
 		function resizingClass(){
 			return options.resizingClass[0] == "." ? options.resizingClass.substring(1) : options.resizingClass;
@@ -188,6 +203,27 @@
 			return height;
 		}	
 
+		var dragEvent = function(event){
+			$(this).addClass(draggingClass());
+			$(this).data("difX", parseInt( $(this).css("left") ) - event.pageX + document.body.scrollTop);
+			$(this).data("difY", parseInt( $(this).css("top") ) - event.pageY + document.body.scrollTop);
+			$(document).on("mousemove",drag);
+			$(document).on("mouseup",drop);
+			return false;
+		};
+
+		var resizeEvent = function(event){
+			var resizer = $(this);
+			options.resizer = resizer;
+			resizer.addClass(resizingClass());
+			resizer.data("difX", parseInt(this.style.left.length > 0 ? this.style.left : 0) - event.pageX + document.body.scrollTop);
+			resizer.data("difY", parseInt(this.style.top.length > 0 ? this.style.top : 0 ) - event.pageY + document.body.scrollTop);
+			$(document).on("mousemove",resize);
+			$(document).on("mouseup",stopResizing);
+			return false;
+		};
+
+
 		var drag = function(event){
 			var element = document.querySelector("." + draggingClass());
 			if (element === undefined || element === null){return;}
@@ -223,27 +259,6 @@
 			options.resizer = undefined;
 		}
 
-		var dragEvent = function(event){
-			$(this).addClass(draggingClass());
-			$(this).data("difX", parseInt( $(this).css("left") ) - event.pageX + document.body.scrollTop);
-			$(this).data("difY", parseInt( $(this).css("top") ) - event.pageY + document.body.scrollTop);
-			$(document).on("mousemove",drag);
-			$(document).on("mouseup",drop);
-			return false;
-		};
-
-		var resizeEvent = function(event){
-			var resizer = $(this);
-			options.resizer = resizer;
-			resizer.addClass(resizingClass());
-			resizer.data("difX", parseInt(this.style.left.length > 0 ? this.style.left : 0) - event.pageX + document.body.scrollTop);
-			resizer.data("difY", parseInt(this.style.top.length > 0 ? this.style.top : 0 ) - event.pageY + document.body.scrollTop);
-			$(document).on("mousemove",resize);
-			$(document).on("mouseup",stopResizing);
-			return false;
-		};
-
-
 		var positionX = function(element){
 			var target = $(element)[0];
 			var posX = target.style.left.length > 0 ? parseInt(target.style.left) : 0;
@@ -260,6 +275,15 @@
 			$(document).on("mousedown", jQueryClassName(options.eventTriggerClass) + " " + jQueryClassName(options.watermarkerClass), dragEvent);
 			$(document).on("mousedown", jQueryClassName(options.eventTriggerClass) + " " + jQueryClassName(options.resizerClass), resizeEvent);			
 		}
+
+		if(options.allowRemove){
+			var $removeContainer = $("<div>",{class: options.removeClass});
+			$(watermark).append($removeContainer);
+			$(watermark).on("click", "." + getClassName(options.removeClass), function(event){
+				removeWatermark($(this).closest("." + getClassName(options.watermarkerClass)), options.element);
+			});
+		}
+
 		options.container = container;
 		options.watermark = watermark;
 		options.watermarkImage = watermarkImage;

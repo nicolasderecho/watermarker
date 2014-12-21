@@ -10,6 +10,13 @@
 			$("#width").val(coords.width);
 			$("#height").val(coords.height);
 			$("#opacity").val(coords.opacity);
+		},
+		onRemove: function(){
+			debugger;
+			console.log("Removing...");
+		},
+		onDestroy: function(){
+			console.log("Destroying...");
 		}
 	});
 

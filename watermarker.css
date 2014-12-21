@@ -10,4 +10,12 @@
 .watermarker-wrapper .watermarker-container .resizer { position: absolute; width: 20px; height: 20px; 
 	right:0px;bottom:0px; background-image: url("images/resize.png"); cursor: se-resize; background-size: 100% 100%; 
 	}
-
+.watermarker-remove-item{
+	display: inline-block; 
+	width:20px; height: 20px; 
+	position: absolute;
+	right: 0px;
+	top:0px;
+	background: url("images/close-icon.png");
+	background-size: cover;
+}
