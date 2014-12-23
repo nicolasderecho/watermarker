@@ -8,11 +8,12 @@
 
 
 	var getCoords = function(element){
+		
 		var opt = { x:element.offsetLeft,
 			y:element.offsetTop,
 			width: element.offsetWidth,
 			height: element.offsetHeight,
-			opacity: parseInt ( $(element).css("opacity") )
+			opacity: parseFloat ( $(element).find("img").css("opacity") ).toFixed(2)
 		}
 		opt.jsonCoords = JSON.stringify(opt);
 		opt.element = element;
@@ -26,6 +27,12 @@
 	var jQueryClassName = function(className){
 		if(className !== undefined && className !== null && className.length > 0){
 			return className[0] == "." ? className : "." + className;
+		}
+	}
+
+	var getClassName = function(className){
+		if(className !== undefined && className !== null && className.length > 0){
+			return className[0] == "." ? className.substring(1) : className;
 		}
 	}
 
@@ -106,12 +113,12 @@
 
 		//Initialize
 		var options = defineOptions(options);
-		var container = $("<div>",{class:options.containerClass});
+		var container = $("<div>",{"class":options.containerClass});
 		container.width(object.width());
 		container.height(object.height());
-		var watermark = $("<div>",{class:options.watermarkerClass}).css("left",options.offsetLeft).css("top",options.offsetTop);
-		var watermarkImage = $("<img>", {src: options.imagePath, class: options.watermarkImageClass});
-		var resizer = $("<div>",{class:options.resizerClass});
+		var watermark = $("<div>",{"class":options.watermarkerClass}).css("left",options.offsetLeft).css("top",options.offsetTop);
+		var watermarkImage = $("<img>", {src: options.imagePath, "class": options.watermarkImageClass});
+		var resizer = $("<div>",{"class":options.resizerClass});
 		var data = $(object).data("pluginWatermarker");
 		if(isFirstWatermark(data)){
 			container.appendTo($(object).parent());
@@ -148,7 +155,7 @@
 				allowRemove: true,
 				aspectRatio: undefined
 			};
-			for(attribute in options){
+			for(var attribute in options){
 				if(options.hasOwnProperty(attribute)){
 					defaults[attribute] = options[attribute];	
 				}
@@ -277,7 +284,7 @@
 		}
 
 		if(options.allowRemove){
-			var $removeContainer = $("<div>",{class: options.removeClass});
+			var $removeContainer = $("<div>",{"class": options.removeClass});
 			$(watermark).append($removeContainer);
 			$(watermark).on("click", "." + getClassName(options.removeClass), function(event){
 				removeWatermark($(this).closest("." + getClassName(options.watermarkerClass)), options.element);
@@ -302,16 +309,21 @@
 					destroyWatermarker($(this),options);
 					break;
 				case "opacity":
-					if (watermarkerArguments.length > 1){
-						$(this).each(function(){
-							var image = $(this).data("pluginWatermarker").watermarkImage;
-							var opacity = watermarkerArguments[1];
-							setOpacity(image,opacity);
-						});							
+					var opacityNumber;
+					switch(watermarkerArguments.length){
+						case 1:
+							opacityNumber = getOpacity($(this).first());	
+							break;
+						case 2:
+							opacityNumber = getOpacity(watermarkerArguments[1])
+							break;
+						case 3:
+							var data = $(this).data("pluginWatermarker")[0];
+							var argument = $(watermarkerArguments[1]); 
+							var elementToChange = ( argument.hasClass(getClassName(data.watermarkImageClass)) ? argument : argument.find(jQueryClassName(data.watermarkImageClass)) );
+							opacityNumber = setOpacity(elementToChange, watermarkerArguments[2]);
 					}
-					if(watermarkerArguments.length == 1){
-						return getOpacity($(this).first());						
-					}
+					return opacityNumber;
 					break;
 				case "remove":
 					if(watermarkerArguments.length > 1 && $(this).length == 1){
