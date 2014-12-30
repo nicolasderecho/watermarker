@@ -1,23 +1,24 @@
 //TO DO : 
+// Mejorar el manejo de las clases, las defaults no deben poder sacarse, solo debe permitirse al usuario q le agregue mas, como con simple_form
 // Permitir girar la imagen
 // Que la opcion de girar o resizear sean opcionales
-// Que el tema de opacidad se pueda setear para cada watermark
 //  Permitir al watermark salirse de foco
 
 ;(function($){
 
 
 	var getCoords = function(element){
-		
-		var opt = { x:element.offsetLeft,
-			y:element.offsetTop,
-			width: element.offsetWidth,
-			height: element.offsetHeight,
-			opacity: parseFloat ( $(element).find("img").css("opacity") ).toFixed(2)
+		if(element !== undefined && element !== null){
+			var opt = { x:$(element).offset().left,
+				y:element.offsetTop,
+				width: element.offsetWidth,
+				height: element.offsetHeight,
+				opacity: parseFloat ( $(element).find("img").css("opacity") ).toFixed(2)
+			}
+			opt.jsonCoords = JSON.stringify(opt);
+			opt.element = element;
+			return opt;
 		}
-		opt.jsonCoords = JSON.stringify(opt);
-		opt.element = element;
-		return opt;
 	}
 
 	var isFirstWatermark = function(data){
@@ -212,8 +213,14 @@
 
 		var dragEvent = function(event){
 			$(this).addClass(draggingClass());
-			$(this).data("difX", parseInt( $(this).css("left") ) - event.pageX + document.body.scrollTop);
-			$(this).data("difY", parseInt( $(this).css("top") ) - event.pageY + document.body.scrollTop);
+			var cssLeft = parseInt($(this).css("left"));
+			var leftDifference = event.pageX - cssLeft;
+			var cssTop = parseInt($(this).css("top"));
+			var topDifference = event.pageY - cssTop;
+			//$(this).data("difX", parseInt( $(this).css("left") ) - event.pageX + document.body.scrollTop);
+			$(this).data("difX", leftDifference);
+			$(this).data("difY", topDifference);
+			//$(this).data("difY", parseInt( $(this).css("top") ) - event.pageY + document.body.scrollTop);
 			$(document).on("mousemove",drag);
 			$(document).on("mouseup",drop);
 			return false;
@@ -235,8 +242,10 @@
 			var element = document.querySelector("." + draggingClass());
 			if (element === undefined || element === null){return;}
 			var container = element.parentNode;
-			var left = parseInt(event.pageX) + $(element).data("difX") + "px";
-			var top = parseInt(event.pageY)  + $(element).data("difY") + "px";
+			//var left = parseInt(event.pageX) + $(element).data("difX") + "px";
+			var left = parseInt(event.pageX) - $(element).data("difX") + "px";
+			//var top = parseInt(event.pageY)  + $(element).data("difY") + "px";
+			var top = parseInt(event.pageY)  - $(element).data("difY") + "px";
 			element.style.left = checkPositionX(left,element);
 			element.style.top  = checkPositionY(top,element);
 			options.onChange(getCoords(element));
@@ -296,7 +305,7 @@
 		options.watermarkImage = watermarkImage;
 		options.resizer = resizer;
 		options.element = object;
-
+		options.onInitialize(getCoords(options.watermark[0]));
 		return options;
 
 	}
