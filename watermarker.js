@@ -9,7 +9,7 @@
 
 	var getCoords = function(element){
 		if(element !== undefined && element !== null){
-			var opt = { x:$(element).offset().left,
+			var opt = { x:element.offsetLeft,
 				y:element.offsetTop,
 				width: element.offsetWidth,
 				height: element.offsetHeight,
