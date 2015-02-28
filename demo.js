@@ -1,7 +1,6 @@
 ;(function(){
 
 	function updateCoords (coords){
-		debugger;
 		$("#posx").val(coords.x);
 		$("#posy").val(coords.y);
 		$("#width").val(coords.width);
@@ -10,13 +9,16 @@
 	}
 
 	$("#image").watermarker({
-		imagePath: "assets/watermark.png",
+		imagePath: "images/watermark.png",
 		offsetLeft:30,
 		offsetTop: 40,
 		onChange: updateCoords,
 		onInitialize: updateCoords,
+		containerClass: "myContainer container",
+		watermarkImageClass: "myImage image",		
+		watermarkerClass: "js-watermark-1 js-watermark",
+		resizerClass: "myResizer",		
 		onRemove: function(){
-			debugger;
 			console.log("Removing...");
 		},
 		onDestroy: function(){

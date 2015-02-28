@@ -1,11 +1,18 @@
 //TO DO : 
-// Mejorar el manejo de las clases, las defaults no deben poder sacarse, solo debe permitirse al usuario q le agregue mas, como con simple_form
 // Permitir girar la imagen
 // Que la opcion de girar o resizear sean opcionales
 //  Permitir al watermark salirse de foco
 
 ;(function($){
 
+	var isPreservedAttribute = function(attribute){
+		preserverdAttributes = ["containerClass", "watermarkerClass", "watermarkImageClass"];
+		return ($.inArray(attribute, preserverdAttributes) > -1);
+	}
+
+	var getClassForAttribute = function(attributeName, attributeValue, defaultValue){
+		return isPreservedAttribute(attributeName) && (attributeValue !== undefined && attributeValue !== null ) ? (defaultValue + " " + attributeValue) : defaultValue;
+	}
 
 	var getCoords = function(element){
 		if(element !== undefined && element !== null){
@@ -110,15 +117,18 @@
 		$self.data("pluginWatermarker",data);		
 	}
 
-	$.watermarker = function(object, options){
+	$.watermarker = function(object, userOptions){
 
 		//Initialize
-		var options = defineOptions(options);
-		var container = $("<div>",{"class":options.containerClass});
+		var options = defineOptions(userOptions);
+		var containerClassName = getClassForAttribute("containerClass",userOptions.containerClass, options.containerClass);
+		var watermarkerClassName = getClassForAttribute("watermarkerClass",userOptions.watermarkerClass, options.watermarkerClass);
+		var watermarkImageClassName = getClassForAttribute("watermarkImageClass",userOptions.watermarkImageClass, options.watermarkImageClass);		
+		var container = $("<div>",{"class":containerClassName});
 		container.width(object.width());
 		container.height(object.height());
-		var watermark = $("<div>",{"class":options.watermarkerClass}).css("left",options.offsetLeft).css("top",options.offsetTop);
-		var watermarkImage = $("<img>", {src: options.imagePath, "class": options.watermarkImageClass});
+		var watermark = $("<div>",{"class":watermarkerClassName}).css("left",options.offsetLeft).css("top",options.offsetTop);
+		var watermarkImage = $("<img>", {src: options.imagePath, "class": watermarkImageClassName});
 		var resizer = $("<div>",{"class":options.resizerClass});
 		var data = $(object).data("pluginWatermarker");
 		if(isFirstWatermark(data)){
@@ -157,7 +167,7 @@
 				aspectRatio: undefined
 			};
 			for(var attribute in options){
-				if(options.hasOwnProperty(attribute)){
+				if(options.hasOwnProperty(attribute) && !isPreservedAttribute(attribute)){
 					defaults[attribute] = options[attribute];	
 				}
 			}
