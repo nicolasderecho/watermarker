@@ -61,10 +61,11 @@
 				var element = this;
 				//element.element.appendTo(element.container.parent());
 				//element.container.remove();
-				element.watermark.remove();
-				element.watermarkImage.remove();
-				element.resizer.remove();
 				element.onRemove(element.watermark,element);
+				element.watermark.remove();
+				//element.watermarkImage.remove();
+				//element.resizer.remove();
+				
 			});
 			if (data.length > 0){
 				var firstWatermark = data[0];
@@ -127,7 +128,7 @@
 		var container = $("<div>",{"class":containerClassName});
 		container.width(object.width());
 		container.height(object.height());
-		var watermark = $("<div>",{"class":watermarkerClassName}).css("left",options.offsetLeft).css("top",options.offsetTop);
+		var watermark = $("<div>",{"class":watermarkerClassName, "data": userOptions.data}).css("left",options.offsetLeft).css("top",options.offsetTop);
 		var watermarkImage = $("<img>", {src: options.imagePath, "class": watermarkImageClassName});
 		var resizer = $("<div>",{"class":options.resizerClass});
 		var data = $(object).data("pluginWatermarker");
@@ -142,7 +143,6 @@
 		resizer.appendTo(watermark);
 		watermark.appendTo(container);
 		watermark.height(checkHeight(watermark.height(), watermark[0]));
-
 
 		// Methods
 
@@ -167,7 +167,7 @@
 				aspectRatio: undefined
 			};
 			for(var attribute in options){
-				if(options.hasOwnProperty(attribute) && !isPreservedAttribute(attribute)){
+				if(options.hasOwnProperty(attribute) && !isPreservedAttribute(attribute) && attribute != "data"){
 					defaults[attribute] = options[attribute];	
 				}
 			}
@@ -238,10 +238,13 @@
 
 		var resizeEvent = function(event){
 			var resizer = $(this);
+			var watermarkToResize = resizer.closest("." + options.watermarkerClass);
 			options.resizer = resizer;
 			resizer.addClass(resizingClass());
-			resizer.data("difX", parseInt(this.style.left.length > 0 ? this.style.left : 0) - event.pageX + document.body.scrollTop);
-			resizer.data("difY", parseInt(this.style.top.length > 0 ? this.style.top : 0 ) - event.pageY + document.body.scrollTop);
+			resizer.data("startPositionX", event.pageX);
+			resizer.data("startPositionY", event.pageY);
+			resizer.data("startWidth", watermarkToResize.width());
+			resizer.data("startHeight", watermarkToResize.height());
 			$(document).on("mousemove",resize);
 			$(document).on("mouseup",stopResizing);
 			return false;
@@ -267,13 +270,17 @@
 		}
 
 		var resize = function(event){
-			var element = $(options.resizer ).parent()[0];
-			var width = parseInt(event.pageX) - parseInt(element.style.left.length > 0 ? element.style.left : 0 ) ;
+			var resizerElement = $(options.resizer );
+			var element = resizerElement.parent()[0];
+			//var width = parseInt(event.pageX) /*- $(options.container).offset().left */- parseInt(element.style.left.length > 0 ? element.style.left : 0 ) ;
+			var width = resizerElement.data("startWidth") + event.pageX -  resizerElement.data("startPositionX");
+			//var width = parseInt(event.pageX) - $(options.container).offset().left - $(element).position().left ;
 			var height;
 			if(options.aspectRatio !== undefined && options.aspectRatio !== null){
 				height = width / options.aspectRatio;
 			}else{
-				height = parseInt(event.pageY)  - parseInt(element.style.top.length > 0 ? element.style.top : 0);	
+				//height = parseInt(event.pageY) /*- $(options.container).offset().top*/ - parseInt(element.style.top.length > 0 ? element.style.top : 0);	
+				height = resizerElement.data("startHeight") + event.pageY -  resizerElement.data("startPositionY");
 			}
 			$(element).width(checkWidth(width,element));
 			$(element).height(checkHeight(height,element));
@@ -281,7 +288,13 @@
 
 		var stopResizing = function(event){
 			$(document).off("mousemove",resize);
-			$(options.resizer).removeClass(resizingClass());
+			$(document).off("mouseup",stopResizing);
+			var resizerElement = $(options.resizer);
+			resizerElement.removeClass(resizingClass());
+			resizerElement.removeData("startPositionX");
+			resizerElement.removeData("startPositionY");
+			resizerElement.removeData("startWidth");
+			resizerElement.removeData("startHeight");			
 			options.resizer = undefined;
 		}
 
