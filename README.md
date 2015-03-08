@@ -78,7 +78,7 @@ En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie s
 
 ###Watermark coordinates
 
-El objecto coords que se envia a los metodos ejecutados en los callbacks onChange y onInitialize tiene las siguientes propiedades:
+El objeto coords que se envia a los metodos ejecutados en los callbacks onChange y onInitialize tiene las siguientes propiedades:
 
 
      Attribute        | Value
