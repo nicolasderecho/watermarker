@@ -82,7 +82,7 @@ El objecto coords que se envia a los metodos ejecutados en los callbacks onChang
 
 ```javascript
      Attribute        | Value
-     ---------------  |:-----------------------
+     ---------------  |-----------------------
      `x`              | `watermark position x`
      `y`              | `watermark position y`                 
      `width`          | `watermark width`                 
@@ -99,7 +99,7 @@ Cuando se inicializa un watermark se le pueden setear las siguientes opciones
 
      Attribute         | Value               | Default
      ---------------   |:---------------------------|:--------------------
-     `imagePath`       | `Ruta de la imagen del watermark`  | `images/watermark.png`
+     `imagePath`       | `Ruta de la imagen del watermark`  | `'images/watermark.png'`
      `containerClass`  | `Clases que se le quieran agregar al wrapper de la imagen`                   | `watermarker-wrapper`
     `watermarkerClass`       | `Clases que se le quieran agregar al wrapper del watermark`  | `watermarker-container`
     `watermarkImageClass`       | `Clases que se le quieran agregar al watermark`  | `watermark-image`
