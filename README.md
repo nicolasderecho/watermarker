@@ -82,7 +82,7 @@ El objecto coords que se envia a los metodos ejecutados en los callbacks onChang
 
 ```javascript
      Attribute        | Value
-     ---------------  |-----------------------
+     ---------------  | ---------------------
      `x`              | `watermark position x`
      `y`              | `watermark position y`                 
      `width`          | `watermark width`                 
