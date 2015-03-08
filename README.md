@@ -1,10 +1,10 @@
 #Watermarker
 
 Add watermarks to your images!
-
-If you want to use this in your project, you only need to add the following scripts 
-
+ 
 ###Installation
+
+If you want to use this in your project, you only need to add the following scripts
 
 ```HTML
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
