@@ -80,16 +80,16 @@ En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie s
 
 El objecto coords que se envia a los metodos ejecutados en los callbacks onChange y onInitialize tiene las siguientes propiedades:
 
-```javascript
-     |Attribute        | Value|
-     |---------------  | ---------------------|
-     |`x`              | `watermark position x`|
-     |`y`              | `watermark position y` |                
-     |`width`          | `watermark width`       |          
-     |`height`         | `watermark height`     |
-     |`opacity`        | `watermark opacity`     |            
-     |`element`        | `<div> watermark container`|                 
-```
+
+     Attribute        | Value
+     ---------------  | ---------------------
+     `x`              | `watermark position x`
+     `y`              | `watermark position y`                 
+     `width`          | `watermark width`                 
+     `height`         | `watermark height`     
+     `opacity`        | `watermark opacity`                 
+     `element`        | `<div> watermark container`                 
+
 
 Estas coordenadas te permitiran procesar la imagen en el servidor para agregarle el watermark!
 
