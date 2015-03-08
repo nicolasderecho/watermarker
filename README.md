@@ -88,7 +88,7 @@ El objecto coords que se envia a los metodos ejecutados en los callbacks onChang
      `width`          | `watermark width`                 
      `height`         | `watermark height`     
      `opacity`        | `watermark opacity`                 
-     `element`        | `<div> watermark container`                 
+     `element`        | `div watermark container`                 
 ```
 
 Estas coordenadas te permitiran procesar la imagen en el servidor para agregarle el watermark!
