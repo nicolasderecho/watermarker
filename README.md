@@ -60,9 +60,9 @@ To initialize the watermarker you should do:
 
 Y ya tendremos un watermark en nuestra imagen! 
 
-Al inicializar el plugin, se envolvera la imagen en un ```HTML <div class= "watermarker-wrapper" >``` 
+Al inicializar el plugin, se envolvera la imagen en un ```<div class= "watermarker-wrapper" >``` 
 
-El watermark estara envuelto en un ```HTML <div class= "watermarker-container"> ```
+El watermark estara envuelto en un ```<div class= "watermarker-container"> ```
 
 En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie se enviaran las nuevas coordenadas al metodo updateCoords.
 
