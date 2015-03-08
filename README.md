@@ -37,7 +37,7 @@ To initialize the watermarker you should do:
 
 ```javascript
     
-     // $(selector).watermarker(options);
+    // $(selector).watermarker(options);
     // Example
     $("#image").watermarker({
         imagePath: "images/watermark.png",
