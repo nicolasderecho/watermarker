@@ -16,6 +16,11 @@
 	position: absolute;
 	right: 0px;
 	top:0px;
-	background: url("images/close-icon.png");
-	background-size: cover;
+	cursor: pointer;
+	/*background: url("images/close-icon.png");
+	background-size: cover;*/
+}
+.watermarker-remove-item img{
+	max-width:100%;
+	max-height: 100%;
 }

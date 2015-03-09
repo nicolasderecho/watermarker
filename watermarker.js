@@ -317,6 +317,8 @@
 
 		if(options.allowRemove){
 			var $removeContainer = $("<div>",{"class": options.removeClass});
+			var $img = $("<img>", {src: "images/close-icon.png"});
+			$removeContainer.append($img);
 			$(watermark).append($removeContainer);
 			$(watermark).on("click", "." + getClassName(options.removeClass), function(event){
 				removeWatermark($(this).closest("." + getClassName(options.watermarkerClass)), options.element);

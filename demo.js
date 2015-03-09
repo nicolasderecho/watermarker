@@ -15,7 +15,7 @@
 		onChange: updateCoords,
 		onInitialize: updateCoords,
 		containerClass: "myContainer container",
-		watermarkImageClass: "myImage image",		
+		watermarkImageClass: "myImage superImage",		
 		watermarkerClass: "js-watermark-1 js-watermark",
 		data: {id: 1, "class": "superclass", pepe: "pepe"},		
 		onRemove: function(){
