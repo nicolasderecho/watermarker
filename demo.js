@@ -19,12 +19,12 @@
 		watermarkerClass: "js-watermark-1 js-watermark",
 		data: {id: 1, "class": "superclass", pepe: "pepe"},		
 		onRemove: function(){
-			if(console && console.log){
+			if(typeof console !== "undefined" && typeof console.log !== "undefined"){
 				console.log("Removing...");
 			}
 		},
 		onDestroy: function(){
-			if(console && console.log){
+			if(typeof console !== "undefined" && typeof console.log !== "undefined"){
 				console.log("Destroying...");	
 			}
 		}
