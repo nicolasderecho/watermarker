@@ -153,6 +153,7 @@
 				onDestroy: function(){},
 				onRemove: function(){},
 				imagePath: "images/watermark.png",
+				removeIconPath: "images/close-icon.png",
 				eventTriggerClass: "watermarker-wrapper",
 				containerClass: "watermarker-wrapper",
 				watermarkerClass: "watermarker-container",
@@ -317,7 +318,7 @@
 
 		if(options.allowRemove){
 			var $removeContainer = $("<div>",{"class": options.removeClass});
-			var $img = $("<img>", {src: "images/close-icon.png"});
+			var $img = $("<img>", {src: options.removeIconPath});
 			$removeContainer.append($img);
 			$(watermark).append($removeContainer);
 			$(watermark).on("click", "." + getClassName(options.removeClass), function(event){

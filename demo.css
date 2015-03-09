@@ -1,8 +1,7 @@
 .info{
 	display:inline-block;
 	position: relative; 
-	top: -500px; 
-	left: 4%; 
+	top: -400px;  
 }
 .image{
 	width:800px; 
@@ -11,8 +10,17 @@
 	position: relative;
 	left: 25px;
 	top: 30px;	
-	margin-right: 10px;
 }
 #image{
 	width:100%;height:100%;
+}
+.container{
+	display: inline-block;
+	width: 65%;
+}
+
+
+.info-container{
+	display: inline-block;
+	width: 33%;
 }
