@@ -99,6 +99,7 @@ Cuando se inicializa un watermark se le pueden setear las siguientes opciones
 
      Attribute         | Value               | Default
      ---------------   |:---------------------------|:--------------------
+     `removeIconPath`  | `Close icon path`  | `'images/close-icon.png'`
      `imagePath`       | `Ruta de la imagen del watermark`  | `'images/watermark.png'`
      `containerClass`  | `Clases que se le quieran agregar al wrapper de la imagen`                   | `watermarker-wrapper`
     `watermarkerClass`       | `Clases que se le quieran agregar al wrapper del watermark`  | `watermarker-container`
