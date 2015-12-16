@@ -7,7 +7,7 @@ Add watermarks to your images!
 If you want to use this in your project, you only need to add the following scripts
 
 ```HTML
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <link rel="StyleSheet" href="watermarker.css" type="text/css">
 <script type="text/javascript" src="watermarker.js"></script>
 ```
@@ -58,13 +58,13 @@ To initialize the watermarker you should do:
     });
 ```
 
-Y ya tendremos un watermark en nuestra imagen! 
+and that's it!
 
-Al inicializar el plugin, se envolvera la imagen en un ```<div class= "watermarker-wrapper" >``` 
+When you initialize the plugin, the image will be wrapped in a `<div class= "watermarker-wrapper">`
 
-El watermark estara envuelto en un ```<div class= "watermarker-container"> ```
+The wartermark will be wrapped in `<div class= "watermarker-container">`
 
-En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie se enviaran las nuevas coordenadas al metodo updateCoords.
+In this example, when the position of the watermark changes the new coordinates will be sent to the `updateCoords` method.
 
 ```javascript
     function updateCoords(coords){
@@ -78,7 +78,7 @@ En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie s
 
 ###Watermark coordinates
 
-El objeto coords que se envia a los metodos ejecutados en los callbacks onChange y onInitialize tiene las siguientes propiedades:
+The `coords` object that is sent to the `onChange` and `onInitialize` callback has the following properties:
 
 
      Attribute        | Value
@@ -91,43 +91,43 @@ El objeto coords que se envia a los metodos ejecutados en los callbacks onChange
      `element`        | `<div> watermark container`                 
 
 
-Estas coordenadas te permitiran procesar la imagen en el servidor para agregarle el watermark!
+With this coordinates you can process the image on the server side to add the watermark in place!
 
 ###Options
 
-Cuando se inicializa un watermark se le pueden setear las siguientes opciones
+When you initialize a watermark you can configure the following options
 
      Attribute         | Value               | Default
      ---------------   |:---------------------------|:--------------------
      `removeIconPath`  | `Close icon path`  | `'images/close-icon.png'`
-     `imagePath`       | `Ruta de la imagen del watermark`  | `'images/watermark.png'`
-     `containerClass`  | `Clases que se le quieran agregar al wrapper de la imagen`                   | `watermarker-wrapper`
-    `watermarkerClass`       | `Clases que se le quieran agregar al wrapper del watermark`  | `watermarker-container`
-    `watermarkImageClass`       | `Clases que se le quieran agregar al watermark`  | `watermark-image`
+     `imagePath`       | `Watermark image route`  | `'images/watermark.png'`
+     `containerClass`  | `Classes for the image wrapper`                   | `watermarker-wrapper`
+    `watermarkerClass`       | `Classes for the watermark wrapper`  | `watermarker-container`
+    `watermarkImageClass`       | `Classes for the watermark`  | `watermark-image`
     `offsetLeft`       | `Watermark Left Offset`  | `0`
     `offsetTop`       | `Watermark Top Offset`  | `0`
-    `allowRemove`       | `Booleano. Si esta en True agrega un icono al watermark para permitir removerlo`  | `true`
-    `aspectRatio`       | `Aspect ratio del watermark`  | `undefined`
-    `data`       | `Recibe un object con los attributos y valores para agregarle al data del container del watermark`  | `{}`
-    `onInitialize`       | `Callback ejecutado al inicializar un watermark`  | `function(){}`
-    `onChange`       | `Callback ejecutado al modificar un watermark`  | `function(){}`
-    `onRemove`       | `Callback ejecutado al remover un watermark`  | `function(){}`
-    `onDestroy`       | `Callback ejecutado al destruir el watermar, es decir, luego de haber removido el ultimo watermark que tenia la imagen`  | `function(){}`
+    `allowRemove`       | `Boolean. If it's true, an icon is added to the watermark to remove it`  | `true`
+    `aspectRatio`       | `Aspect ratio of the watermark`  | `undefined`
+    `data`       | `Receives an object with the attributes and values to add the corresponding data to the watermark container`  | `{}`
+    `onInitialize`       | `Callback executed when the watermark is initialized`  | `function(){}`
+    `onChange`       | `Callback executed when the watermark is modified`  | `function(){}`
+    `onRemove`       | `Callback executed when the watermark is removed`  | `function(){}`
+    `onDestroy`       | `Callback executed when the watermark is destroyed, meaning after the last watermark of the image is removed`  | `function(){}`
 
-Adicionalmente el plugin permite setear algunas clases
- 
+Also, the plugin allows you to set some classes
+
      Attribute         | Value                  | Default
      ---------------   |:-----------------------|:--------------------
-     `removeClass`     | `Clase del elemento que permite remover el watermark` | `watermarker-remove-item`
-     `resizerClass`    | `Clase del elemento que permite resizear el watermark`     | `resizer`
-     `draggingClass`   | `Clase que se le agrega al container del watermark mientras se lo esta moviendo`     | `dragging`
-     `resizingClass`   | `Clase que se le agrega al elemento resizer cuando se esta resizeando el watermark`     | `resizing`
+     `removeClass`     | `Class of the element that allows you to remove the watermark` | `watermarker-remove-item`
+     `resizerClass`    | `Class of the element that allows you to resize the watermark`     | `resizer`
+     `draggingClass`   | `Class added to the container of the watermark when it's being moved`     | `dragging`
+     `resizingClass`   | `Class added to the element when it's being resized`     | `resizing`
 
-Sin embargo estas ultimas opciones solo aceptan una clase. No utilices algo como "myResizer otherResizer" porque no funcionara. (Realmente nunca deberia ser necesario modificar estas opciones. Hazlo bajo tu propia responsabilidad)
+However this las options only accept one class. Do not use a space separated class name like `myResizer otherResizer` because it's not supported yet (In practice, it'll never be necessary to change this options)
 
 ###Multiple Watermarks
 
-El plugin soporta agregarle varios watermarks a una imagen. para hacerlo solo debes volver a llamarlo
+The plugin supports multiple watermarks for a single image. To do it you just have to re-call it:
 
 ```javascript
     
@@ -143,4 +143,4 @@ El plugin soporta agregarle varios watermarks a una imagen. para hacerlo solo de
 
 ```
 
-y voila! ya tienes 2 watermarks en la imagen
+and voila!
