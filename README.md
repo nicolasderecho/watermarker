@@ -100,28 +100,28 @@ When you initialize a watermark you can configure the following options
      Attribute         | Value               | Default
      ---------------   |:---------------------------|:--------------------
      `removeIconPath`  | `Close icon path`  | `'images/close-icon.png'`
-     `imagePath`       | `Ruta de la imagen del watermark`  | `'images/watermark.png'`
-     `containerClass`  | `Clases que se le quieran agregar al wrapper de la imagen`                   | `watermarker-wrapper`
-    `watermarkerClass`       | `Clases que se le quieran agregar al wrapper del watermark`  | `watermarker-container`
-    `watermarkImageClass`       | `Clases que se le quieran agregar al watermark`  | `watermark-image`
+     `imagePath`       | `Watermark image route`  | `'images/watermark.png'`
+     `containerClass`  | `Classes for the image wrapper`                   | `watermarker-wrapper`
+    `watermarkerClass`       | `Classes for the watermark wrapper`  | `watermarker-container`
+    `watermarkImageClass`       | `Classes for the watermark`  | `watermark-image`
     `offsetLeft`       | `Watermark Left Offset`  | `0`
     `offsetTop`       | `Watermark Top Offset`  | `0`
-    `allowRemove`       | `Booleano. Si esta en True agrega un icono al watermark para permitir removerlo`  | `true`
-    `aspectRatio`       | `Aspect ratio del watermark`  | `undefined`
-    `data`       | `Recibe un object con los attributos y valores para agregarle al data del container del watermark`  | `{}`
-    `onInitialize`       | `Callback ejecutado al inicializar un watermark`  | `function(){}`
-    `onChange`       | `Callback ejecutado al modificar un watermark`  | `function(){}`
-    `onRemove`       | `Callback ejecutado al remover un watermark`  | `function(){}`
-    `onDestroy`       | `Callback ejecutado al destruir el watermar, es decir, luego de haber removido el ultimo watermark que tenia la imagen`  | `function(){}`
+    `allowRemove`       | `Boolean. If it's true, an icon is added to the watermark to remove it`  | `true`
+    `aspectRatio`       | `Aspect ratio of the watermark`  | `undefined`
+    `data`       | `Receives an object with the attributes and values to add the corresponding data to the watermark container`  | `{}`
+    `onInitialize`       | `Callback executed when the watermark is initialized`  | `function(){}`
+    `onChange`       | `Callback executed when the watermark is modified`  | `function(){}`
+    `onRemove`       | `Callback executed when the watermark is removed`  | `function(){}`
+    `onDestroy`       | `Callback executed when the watermark is destroyed, meaning after the last watermark of the image is removed`  | `function(){}`
 
 Also, the plugin allows you to set some classes
 
      Attribute         | Value                  | Default
      ---------------   |:-----------------------|:--------------------
-     `removeClass`     | `Clase del elemento que permite remover el watermark` | `watermarker-remove-item`
-     `resizerClass`    | `Clase del elemento que permite resizear el watermark`     | `resizer`
-     `draggingClass`   | `Clase que se le agrega al container del watermark mientras se lo esta moviendo`     | `dragging`
-     `resizingClass`   | `Clase que se le agrega al elemento resizer cuando se esta resizeando el watermark`     | `resizing`
+     `removeClass`     | `Class of the element that allows you to remove the watermark` | `watermarker-remove-item`
+     `resizerClass`    | `Class of the element that allows you to resize the watermark`     | `resizer`
+     `draggingClass`   | `Class added to the container of the watermark when it's being moved`     | `dragging`
+     `resizingClass`   | `Class added to the element when it's being resized`     | `resizing`
 
 However this las options only accept one class. Do not use a space separated class name like `myResizer otherResizer` because it's not supported yet (In practice, it'll never be necessary to change this options)
 
