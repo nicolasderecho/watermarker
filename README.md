@@ -7,7 +7,7 @@ Add watermarks to your images!
 If you want to use this in your project, you only need to add the following scripts
 
 ```HTML
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <link rel="StyleSheet" href="watermarker.css" type="text/css">
 <script type="text/javascript" src="watermarker.js"></script>
 ```
@@ -58,13 +58,13 @@ To initialize the watermarker you should do:
     });
 ```
 
-Y ya tendremos un watermark en nuestra imagen! 
+and that's it!
 
-Al inicializar el plugin, se envolvera la imagen en un ```<div class= "watermarker-wrapper" >``` 
+When you initialize the plugin, the image will be wrapped in a `<div class= "watermarker-wrapper">`
 
-El watermark estara envuelto en un ```<div class= "watermarker-container"> ```
+The wartermark will be wrapped in `<div class= "watermarker-container">`
 
-En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie se enviaran las nuevas coordenadas al metodo updateCoords.
+In this example, when the position of the watermark changes the new coordinates will be sent to the `updateCoords` method.
 
 ```javascript
     function updateCoords(coords){
@@ -78,7 +78,7 @@ En este ejemplo, al inicializar el watermark y cada vez que su posicion cambie s
 
 ###Watermark coordinates
 
-El objeto coords que se envia a los metodos ejecutados en los callbacks onChange y onInitialize tiene las siguientes propiedades:
+The `coords` object that is sent to the `onChange` and `onInitialize` callback has the following properties:
 
 
      Attribute        | Value
@@ -91,11 +91,11 @@ El objeto coords que se envia a los metodos ejecutados en los callbacks onChange
      `element`        | `<div> watermark container`                 
 
 
-Estas coordenadas te permitiran procesar la imagen en el servidor para agregarle el watermark!
+With this coordinates you can process the image on the server side to add the watermark in place!
 
 ###Options
 
-Cuando se inicializa un watermark se le pueden setear las siguientes opciones
+When you initialize a watermark you can configure the following options
 
      Attribute         | Value               | Default
      ---------------   |:---------------------------|:--------------------
@@ -114,8 +114,8 @@ Cuando se inicializa un watermark se le pueden setear las siguientes opciones
     `onRemove`       | `Callback ejecutado al remover un watermark`  | `function(){}`
     `onDestroy`       | `Callback ejecutado al destruir el watermar, es decir, luego de haber removido el ultimo watermark que tenia la imagen`  | `function(){}`
 
-Adicionalmente el plugin permite setear algunas clases
- 
+Also, the plugin allows you to set some classes
+
      Attribute         | Value                  | Default
      ---------------   |:-----------------------|:--------------------
      `removeClass`     | `Clase del elemento que permite remover el watermark` | `watermarker-remove-item`
@@ -123,11 +123,11 @@ Adicionalmente el plugin permite setear algunas clases
      `draggingClass`   | `Clase que se le agrega al container del watermark mientras se lo esta moviendo`     | `dragging`
      `resizingClass`   | `Clase que se le agrega al elemento resizer cuando se esta resizeando el watermark`     | `resizing`
 
-Sin embargo estas ultimas opciones solo aceptan una clase. No utilices algo como "myResizer otherResizer" porque no funcionara. (Realmente nunca deberia ser necesario modificar estas opciones. Hazlo bajo tu propia responsabilidad)
+However this las options only accept one class. Do not use a space separated class name like `myResizer otherResizer` because it's not supported yet (In practice, it'll never be necessary to change this options)
 
 ###Multiple Watermarks
 
-El plugin soporta agregarle varios watermarks a una imagen. para hacerlo solo debes volver a llamarlo
+The plugin supports multiple watermarks for a single image. To do it you just have to re-call it:
 
 ```javascript
     
@@ -143,4 +143,4 @@ El plugin soporta agregarle varios watermarks a una imagen. para hacerlo solo de
 
 ```
 
-y voila! ya tienes 2 watermarks en la imagen
+and voila!
