@@ -285,6 +285,7 @@
 			}
 			$(element).width(checkWidth(width,element));
 			$(element).height(checkHeight(height,element));
+			options.onChange(getCoords(element));
 		}
 
 		var stopResizing = function(event){
